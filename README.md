@@ -65,7 +65,9 @@ Create the policies:
 
 Policy statements used: 
 ```
-Allow dynamic-group FnFacesDemo to manage objects in compartment compartment-name
+allow dynamic-group FnFacesDemo to read objects in compartment COMPARTMENT-NAME where target.bucket.name='facedetection-incoming'
+
+allow dynamic-group FnFacesDemo to manage objects in compartment COMPARTMENT-NAME where all {target.bucket.name='facedetection-results', request.permission='OBJECT_CREATE'}
 
 Allow service cloudEvents to use functions-family in compartment compartment-name
 ```
