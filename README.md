@@ -19,49 +19,49 @@ Key things to highlight:
 * When the function is running it's connected to a customer-owned private network  - in this case we only use OCI resources but you could also attach to private services you run on your VCN like databases or rest APIs.
 
 
-## Demo notes
+## Demo Steps
 
 The face recognition requires a full-face image at a reasonable resolution - make sure you stand well back from the camera.
 Images are uploaded from the cloud and may be publicly accessible - they use random, hard to guess IDs by default.
 
 Example walk through - this assumes you already have an account with access to functions and events,
 
-It is recommended to set up an OCI account with only read/write access to the appropriate buckets.
+1. It is recommended to set up an OCI account with only read/write access to
+ the appropriate buckets.
 
 The input bucket "facedetection-incoming", output bucket "facedetection-results" and "ui" bucket must also have already been created in your compartment. 
 
-Create the function:
+2. Create the function:
 ```
 fn create app faces-demo --annotation 'oracle.com/oci/subnetIds=["ocid1.subnet.oc1.phx.aaaaaaa...","ocid1.subnet.oc1.phx.aaaaaaaab...","ocid1.subnet.oc1.phx.aaaaaaaap..."]'
-fn config app faces-demo OCI_REGION us-phoenix-1
+fn config app faces-demo OCI_REGION us-ashburn-1
 fn config app faces-demo OUTPUT_BUCKET "facedetection-results"
 ```
 
-Deploy the function:
+3. Deploy the function:
 ```
 fn -v deploy --app faces-demo
 ```
+
 These next few steps can be done through the OCI console.
 
-Set up the events rules:
+4. Set up the events rules:
 ![EVENTS RULE 1](events.rule.1.png)
 
 ![EVENTS RULE 2](events.rule.2.png)
 
-Create the dynamic group: 
-![DYNAMIC GROUP](dynamic.group.png)
+5. Create the dynamic group: 
 
 Dynamic Group name: 
 ```
 FnFacesDemo
 ```
-The matching rule used:
+The matching rule used based on the function's OCID:
 ```
 resource.id = 'ocid1.fnfunc.oc1.iad.aaaaaaaaabgdr2keaobctakezjz5i4ujj7g25q7sx5mvr55pms6f4da'
 ```
 
-Create the policies:
-![POLICIES](policies.png)
+6. Create the policies:
 
 Policy statements used: 
 ```
@@ -72,27 +72,30 @@ allow dynamic-group FnFacesDemo to manage objects in compartment COMPARTMENT-NAM
 Allow service cloudEvents to use functions-family in compartment compartment-name
 ```
 
-Create a Pre-Authenticated Request URL for the facedetection-incoming bucket:
+7. Create a Pre-Authenticated Request (PAR) URL for the input bucket 
+`facedetection-incoming`:
 ![PAR](par.png)
 
-And edit the visibility of output bucket facedetection-results to public.
+8. In [index.html](dumbui/index.html) set `const sombreroSourceBucketURLBase `
+ to the Pre-Authenticated Request (PAR) URL created above. 
 
-Within index.html set `const sombreroSourceBucketURLBase ` to the Pre-Authenticated Request URL, and, `const sombreroOutputURLBase` to the public address.
-The public address will be in the form of: 
+9. Change the visibility of output bucket `facedetection-results` to `Public`.
+
+10. In [index.html](dumbui/index.html) set `const sombreroOutputURLBase` to the
+ bucket's public address. The public address will be in the form of: 
+```
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/<namespace>/b/<bucket-name>/o/
 ```
 
-"https://objectstorage.us-phoenix-1.oraclecloud.com/n/<namespace>/b/<bucket-name>/o/";
-```
-
-
-Open the UI:
+11. Open the UI in FireFox or Chrome:
 ```
  open dumbui/index.html
 ```
 
-Update the browser url to add `?sombrero=true` to the end
+12. Update the browser url to add `?sombrero=true` to the end
 
-## Deploying the demo
+
+## Debugging the demo
 
 The demo UI is hosted in a public Object Storage bucket. If you append
 *?debug* to the end of the URL it will show some debugging information while
@@ -107,10 +110,10 @@ We also have a short URL [http://bit.ly/openworld-cloud-events-function](http://
 
 To push the demo page to the "ui" bucket:
 ```
-
 oci os object put -ns tenant-name -bn ui --name index.html --file dumbui/index.html --content-type "text/html" --force --profile $PROFILE
 ```
 Or you can directly upload the index.html file to the bucket using the OCI console.
+
 ## Stolen Resources
 
 Spinner was #2 from this site, http://tobiasahlin.com/spinkit/
