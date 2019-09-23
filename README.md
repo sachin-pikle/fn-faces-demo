@@ -57,7 +57,7 @@ FnFacesDemo
 ```
 The matching rule used:
 ```
-ALL {resource.type = 'fnfunc', resource.compartment.id = 'ocid1.compartment.oc1..aaa...vveq'}
+resource.id = 'ocid1.fnfunc.oc1.iad.aaaaaaaaabgdr2keaobctakezjz5i4ujj7g25q7sx5mvr55pms6f4da'
 ```
 
 Create the policies:
