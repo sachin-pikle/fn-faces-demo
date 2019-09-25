@@ -94,25 +94,22 @@ https://objectstorage.us-phoenix-1.oraclecloud.com/n/<namespace>/b/<bucket-name>
 
 12. Update the browser url to add `?sombrero=true` to the end
 
+13. To push the demo page to the "ui" bucket:
+    You can directly upload the index.html file to the "ui" bucket using the OCI
+     console.
+     
+     OR 
+     
+    ```
+    oci os object put -ns tenant-name -bn ui --name index.html --file dumbui/index.html --content-type "text/html" --force --profile $PROFILE
+    ```
+    
 
 ## Debugging the demo
 
 The demo UI is hosted in a public Object Storage bucket. If you append
 *?debug* to the end of the URL it will show some debugging information while
 it's running.
-
-[Exciting Sombrero demo](https://objectstorage.us-phoenix-1.oraclecloud.com/n/ocimiddleware/b/ui/o/index.html).
-
-We also have a short URL [http://bit.ly/openworld-cloud-events-function](http://bit.ly/openworld-cloud-events-function) and a QR Code to take people directly to the demo page in Object Storage.
-
-![QR Code For Demo URL](qrcode.for.demo.url.png)
-
-
-To push the demo page to the "ui" bucket:
-```
-oci os object put -ns tenant-name -bn ui --name index.html --file dumbui/index.html --content-type "text/html" --force --profile $PROFILE
-```
-Or you can directly upload the index.html file to the bucket using the OCI console.
 
 ## Stolen Resources
 
